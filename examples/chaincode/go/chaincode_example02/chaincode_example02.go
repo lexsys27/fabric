@@ -35,9 +35,27 @@ type SimpleChaincode struct {
 }
 
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
-	fmt.Println("ex02 Init")
-	_, args := stub.GetFunctionAndParameters()
-	var A, B string    // Entities
+  fmt.Println("ex02 Init")
+	function, args := stub.GetFunctionAndParameters()
+	if function == "init" {
+		return t.init(stub, args)
+	} else if function == "migrate" {
+		return t.migrate(stub, args)
+	} 
+
+  return shim.Error("Invalid invoke function name")
+}
+
+func (t *SimpleChaincode) migrate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+  // Do nothing - the blockchain is already initialised
+
+  return shim.Success(nil)
+}
+
+func (t *SimpleChaincode) init(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+  fmt.Println("ex02 Init")
+	
+  var A, B string    // Entities
 	var Aval, Bval int // Asset holdings
 	var err error
 
